@@ -38,6 +38,50 @@
     <textarea name="tout" rows=10 cols=40></textarea>
   </form>
 
+<script>
+	var dictionary = [
+     "apple",
+     "banana",
+     "orange",
+     "pear",
+     "watermelon,"
+	"dirty room"
+   ];
+
+   function isValidWord(word) {
+     for(var i = 0, n = dictionary.length; i < n; i++) {
+       if(word === dictionary[i]) {
+         return true;
+       }
+     }
+     return false;
+   }
+
+var str,re,cnt,cntmax;
+
+function rst(){
+    cnt=0; cntmax=10000; str="";
+    if (document.forms[0].re.value != ""){
+        re=new RegExp(document.forms[0].re.value);
+    } else { re=null; }
+}
+
+function go(prefix, postfix){
+    if (cnt>=cntmax) return;
+    if (postfix==""){
+        if ((re==null || prefix.match(re)==null) && isValidWord(prefix) ){
+            str+=prefix+"\r\n"; cnt++;
+        }
+        return;
+    }
+    for (var i=0;i<postfix.length;i++){
+        var prefix2=prefix+postfix.charAt(i);
+        var postfix2=postfix.substring(0,i)+postfix.substring(i+1);
+        go(prefix2,postfix2);
+    }
+}
+</script>
+	
 <script>document.createElement('main');</script>
 </body>
 </html>
