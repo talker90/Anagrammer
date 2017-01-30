@@ -1,1 +1,1 @@
-# Anagrammer expanded from https://shrinathsuccess.wordpress.com/2012/09/20/how-to-create-an-anagram-generator/
+# Anagrammer expanded from http://stackoverflow.com/questions/24085190/make-anagrams-generator-in-javascript-finding-only-words-contained-in-a-list
