@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Oswald|Montserrat">
+
+	<title>Medallion Anagrammer V 1.0</title>
+
+	<style type="text/css">
+
+		html {
+  			box-sizing: border-box;
+		}
+
+		*, *:before, *:after {
+  			box-sizing: inherit;
+		}
+
+		main {
+			display: block;
+		}
+
+	</style>
+</head>
+<body>
+
+ <form>
+
+Anagram this word:<input type="text" name="t" /> <br>
+Exclude these pat:<input type="text" name="re" /> <br>
+<input type="button" value="Generate anagrams (max 10000)"
+onClick="javascript: runAnagramGenerator(t.value, re.value, tout);" />
+
+<br>
+<textarea name="tout" rows=10 cols=40></textarea>
+
+</form>
+
+<script>
+	var maxCount = 10000;
+var dictionary = [
+    "apple",
+    "banana",
+    "orange",
+    "pear",
+    "watermelon"
+];
+
+function isValidWord(word) {
+    for(var i = 0, n = dictionary.length; i < n; i++) {
+        if(word === dictionary[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+Generates all of the anagrams using a dictionary and an exclusion list read from
+an HTML form.
+*/
+function runAnagramGenerator(anagramString, excludesString, tout) {
+    var excludes = getExclusionList(excludesString);
+    var anagrams = [];
+    generateAnagrams("", anagramString, excludes, anagrams);
+    //Remove duplicates
+    uniqueAnagramList = anagrams.filter(function(elem, pos, self) {
+        return self.indexOf(elem) == pos;
+    });
+    console.log('Anagrams: ' + uniqueAnagramList.length);
+    tout.value = "";
+    for(var i = 0, n = uniqueAnagramList.length; i < n; i++) {
+        tout.value += uniqueAnagramList[i] + "\r\n";
+    }
+}
+
+function getExclusionList(excludesString) {
+    var excludes = [];
+    if (excludesString != "") {
+        var excludesArray = excludesString.split(",");
+        for(var i = 0, n = excludesArray.length; i < n; i++) {
+            excludes.push(new RegExp(excludesArray[i]));
+        }
+    }
+    return excludes;
+}
+
+function generateAnagrams(prefix, postfix, excludes, resultArray) {
+    if(resultArray.length >= maxCount) return;
+    
+    if (postfix == "") {
+        var meetsConditions = true;
+        if(isValidWord(prefix) === false) meetsConditions = false;
+        for(var i = 0, n = excludes.length; i < n; i++) {
+            if(prefix.match(excludes[i]) != null) {
+                meetsConditions = false;
+                break;
+            }
+        }
+        if(meetsConditions) {
+            resultArray.push(prefix);
+        }
+    }
+	for(var i = 0, n = postfix.length; i < n; i++) {
+        var prefix2 = prefix + postfix.charAt(i);
+        var postfix2 = postfix.substring(0,i) + postfix.substring(i+1);
+        generateAnagrams(prefix2, postfix2, excludes, resultArray);
+	}    
+}
+
+</script>
+	
+<script>document.createElement('main');</script>
+</body>
+</html>
